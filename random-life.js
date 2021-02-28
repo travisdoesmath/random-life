@@ -10,8 +10,8 @@ let cells = [],
     cellCounts = [],
     nIterations = 0;
 
-let initialPercentage = 0.19,
-    neighborRadius = 4
+let initialPercentage = 0.185,
+    neighborRadius = 5
 
 function initializeCells(p) {
     nIterations = 0;
@@ -131,7 +131,7 @@ d3.select("body").on("keydown", function(d) {
     if (['1','2','3','4','5','6','7','8','9'].includes(d3.event.key) && !pause) {
         // let p = .15+(+d3.event.key - 1)/20
         let lowPercentage = .15
-        let highPercentage = .6
+        let highPercentage = .22
 
         let p = lowPercentage + (+d3.event.key - 1)/8 * (highPercentage - lowPercentage)
         console.log(p)
