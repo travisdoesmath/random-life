@@ -14,14 +14,10 @@
     <div class="column" id="body">
         <h1 class="title">Random Life</h1>
         <!-- <svg id="lifeSvg"></svg> -->
-        <p>This version of Random Life follows the same rules of Conway's Game of Life, but instead of neighbors being adjacent cells,
-            a random pattern of neighbors within a radius is chosen (In this instance, the radius is 5). Each cell uses the same random pattern. For a version where every cell has it's own random pattern, see
-            <a href="index.html">this version</a>.</p>
-        <p>Tap/click the pattern to generate a new random pattern.</p>
-        <p>Tap/click the larger grid to reinitialize with random live cells</p>
-        <div id="pattern">
-            <canvas id="patternCanvas"></canvas>
-        </div>
+        <p>Random Life follows the same rules of Conway's Game of Life, but the neighbors are randomly chosen on initialization from cells within a certain radius. 
+            In this instance, the radius is 5. (Note, each cell gets assigned a different random pattern of neighbors. In <a href="index.html">this version</a>, 
+            every cell follows the same random pattern)</p>
+        <p>Tap/click the grid to restart</p>
         <canvas id="lifeCanvas"></canvas>
         <div id="percentage-slider"></div>
         <div id="speed-slider"></div>

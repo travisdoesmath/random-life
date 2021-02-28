@@ -10,6 +10,8 @@ let cells = [],
     cellCounts = [],
     nIterations = 0;
 
+let randomShape = []
+
 let initialPercentage = 0.19,
     lowPercentage = 0.15,
     highPercentage = 0.25,
@@ -62,10 +64,10 @@ function createSlider(options) {
 // initialPercentage slider
 createSlider({
     div:'#percentage-slider',
-    min:lowPercentage,
-    max:highPercentage,
-    step:0.001,
-    tickFormat:x => `${(+x*100).toFixed(1)}%`,
+    min:0,
+    max:1,
+    step:0.0001,
+    tickFormat:x => `${(+x*100).toFixed(0)}%`,
     default:initialPercentage,
     onchange:val => {
             initialPercentage = val
@@ -86,6 +88,34 @@ createSlider({
     title:'Speed'
 })
 
+function initializePattern() {
+
+    randomShape = [];
+
+    let context = patternCanvas.node().getContext('2d');
+    context.beginPath();
+    context.clearRect(0, 0, (2 * neighborRadius + 1) * pixelWidth, (2 * neighborRadius + 1) * pixelWidth + 1)
+
+    context.beginPath();
+    context.fillStyle = 'red'
+    context.fillRect(neighborRadius * pixelWidth, neighborRadius * pixelWidth, pixelWidth, pixelWidth)
+
+    for (let i = 0; i < 8; i++) {
+        r = 1 + (neighborRadius - 1) * Math.random()
+        theta = Math.random() * Math.PI * 2
+        x = Math.round(r * Math.cos(theta))
+        y = Math.round(r * Math.sin(theta))
+        context.beginPath()
+        context.fillStyle = 'black'
+        context.fillRect((x + neighborRadius) * pixelWidth, (y + neighborRadius)* pixelWidth, pixelWidth, pixelWidth)
+
+        randomShape.push({
+            x: x,
+            y: y
+        })
+    }
+}
+
 function initializeCells(p) {
     nIterations = 0;
     cells = [];
@@ -97,11 +127,9 @@ function initializeCells(p) {
                 neighbors: []
             }
             for (let i = 0; i < 8; i++) {
-                r = 1 + (neighborRadius - 1) * Math.random()
-                theta = Math.random() * Math.PI * 2
                 cell.neighbors.push({
-                    x: x + Math.round(r * Math.cos(theta)), 
-                    y: y + Math.round(r * Math.sin(theta))
+                    x: x + randomShape[i].x, 
+                    y: y + randomShape[i].y
                 })
             }
             row.push(cell);
@@ -178,6 +206,11 @@ function evolve(cells) {
     return newCells;
 }
 
+let patternCanvas = d3.select('#patternCanvas')
+    .attr('width', `${(2 * neighborRadius + 1) * pixelWidth}px`)
+    .attr('height', `${(2 * neighborRadius + 1) * pixelWidth}px`)
+    .style('border', 'solid 1px black')
+
 let lifeCanvas = d3.select('#lifeCanvas')
     .attr('width', `${pixelsX * pixelWidth}px`)
     .attr('height', `${pixelsY * pixelWidth}px`)
@@ -207,6 +240,11 @@ d3.select("body").on("keydown", function(d) {
     }
 })
 
+d3.select("#patternCanvas").on("click", () => {
+    initializePattern();
+    initializeCells(initialPercentage)
+})
+
 d3.select("#lifeCanvas").on("click", () => initializeCells(initialPercentage))
 
 function play() {
@@ -218,6 +256,7 @@ function play() {
 
 
 let pause = false;
+initializePattern();
 initializeCells(initialPercentage);
 
 play();
