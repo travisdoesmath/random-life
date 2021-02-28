@@ -10,12 +10,12 @@ let cells = [],
     cellCounts = [],
     nIterations = 0;
 
+let randomShape = []
+
 let initialPercentage = 0.19,
     lowPercentage = 0.15,
     highPercentage = 0.25,
     neighborRadius = 5
-
-
 
 function createSlider(options) {
     var Slider = d3
@@ -64,10 +64,10 @@ function createSlider(options) {
 // initialPercentage slider
 createSlider({
     div:'#percentage-slider',
-    min:lowPercentage,
-    max:highPercentage,
-    step:0.001,
-    tickFormat:x => `${(+x*100).toFixed(1)}%`,
+    min:0,
+    max:1,
+    step:0.0001,
+    tickFormat:x => `${(+x*100).toFixed(0)}%`,
     default:initialPercentage,
     onchange:val => {
             initialPercentage = val
@@ -88,8 +88,9 @@ createSlider({
     title:'Speed'
 })
 
-function initializeCells(p) {
-    let randomShape = []
+function initializePattern() {
+
+    randomShape = [];
 
     let context = patternCanvas.node().getContext('2d');
     context.beginPath();
@@ -113,10 +114,9 @@ function initializeCells(p) {
             y: y
         })
     }
+}
 
-
-
-
+function initializeCells(p) {
     nIterations = 0;
     cells = [];
     for (let x = 0; x < pixelsX; x++) {
@@ -240,6 +240,11 @@ d3.select("body").on("keydown", function(d) {
     }
 })
 
+d3.select("#patternCanvas").on("click", () => {
+    initializePattern();
+    initializeCells(initialPercentage)
+})
+
 d3.select("#lifeCanvas").on("click", () => initializeCells(initialPercentage))
 
 function play() {
@@ -251,6 +256,7 @@ function play() {
 
 
 let pause = false;
+initializePattern();
 initializeCells(initialPercentage);
 
 play();
