@@ -10,8 +10,81 @@ let cells = [],
     cellCounts = [],
     nIterations = 0;
 
-let initialPercentage = 0.185,
+let initialPercentage = 0.19,
+    lowPercentage = 0.15,
+    highPercentage = 0.25,
     neighborRadius = 5
+
+function createSlider(options) {
+    var Slider = d3
+        .sliderHorizontal()
+        .tickFormat(options.tickFormat)
+        .min(options.min)
+        .max(options.max)
+        .step(options.step)
+        .width(450)
+        .default(options.default)
+        .displayValue(options.displayValue)
+        .fill('#2196f3')
+        .on('onchange', options.onchange)    
+    
+    if (options.div) {
+        var sliderDiv = d3.select(options.div)
+            .classed("row", true)
+            .classed("justify-content-center", true)
+            .classed("align-items-center", true)
+            .append("div")
+            .classed("col-xs-12 col-lg-6", true)
+    } else {
+        var sliderDiv = d3.select("#body")
+            .append("div")
+            .classed("row", true)
+            .classed("justify-content-center", true)
+            .classed("align-items-center", true)
+            .append("div")
+            .classed("col-xs-12 col-lg-6", true)
+    }
+
+    sliderDiv.append("h3")
+        .text(options.title)
+
+    sliderDiv
+        .append("svg")
+        // .attr("width", 500)
+        // .attr("height", 100)
+        .style("width","90%")
+        .attr("viewBox", `0 0 500 60`)
+        .append("g")
+        .attr("transform","translate(20,20)")
+        .call(Slider)
+}
+
+// initialPercentage slider
+createSlider({
+    div:'#percentage-slider',
+    min:lowPercentage,
+    max:highPercentage,
+    step:0.001,
+    tickFormat:x => `${(+x*100).toFixed(1)}%`,
+    default:initialPercentage,
+    onchange:val => {
+            initialPercentage = val
+        },
+    title:'Initial Percentage'
+})
+
+// speed slider
+createSlider({
+    min:1,
+    max:8,
+    step:1,
+    tickFormat:x => x,
+    default:5,
+    onchange:val => {
+            timeStep = 2**(9 - val)
+        },
+    title:'Speed'
+})
 
 function initializeCells(p) {
     nIterations = 0;
@@ -128,32 +201,13 @@ function drawScreen() {
 }
 
 d3.select("body").on("keydown", function(d) {
-    if (['1','2','3','4','5','6','7','8','9'].includes(d3.event.key) && !pause) {
-        // let p = .15+(+d3.event.key - 1)/20
-        let lowPercentage = .15
-        let highPercentage = .22
-
-        let p = lowPercentage + (+d3.event.key - 1)/8 * (highPercentage - lowPercentage)
-        console.log(p)
-
-        initializeCells(p)
-    }
-
-    if (d3.event.key == "ArrowLeft" && timeStep < maxTimeStep) {
-        timeStep = timeStep * 2;
-    }
-
-    if (d3.event.key == "ArrowRight" && timeStep > minTimeStep) {
-        timeStep = timeStep * .5;
-    }
-
-
-
     if (d3.event.key == "Escape" || d3.event.key.toLowerCase() == "p") {
         pause = !pause; 
         if (!pause) { play(); } 
     }
 })
+
+d3.select("#lifeCanvas").on("click", () => initializeCells(initialPercentage))
 
 function play() {
     nIterations++;

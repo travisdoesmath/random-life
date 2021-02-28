@@ -7,15 +7,18 @@
     <meta property="og:image" content="https://travisdoesmath.github.io/random-life/preview.png">
     <meta property="og:url" content="https://travisdoesmath.github.io/random-life/">
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div class="column" id="body">
         <h1 class="title">Random Life</h1>
         <!-- <svg id="lifeSvg"></svg> -->
+        <p>Random Life follows the same rules of Conway's Game of Life, but the neighbors are randomly chosen from cells within a certain radius. In this instance, the radius is 5.</p>
+        <p>Tap/click the grid to restart</p>
         <canvas id="lifeCanvas"></canvas>
-        <p>Use left/right arrow keys to decrease/increase speed, <em>esc</em> or <em>p</em> to pause, and 1-9 to reinitialize (from 15% of cells active to 22%).</p>
-        <p>Random Life follows the same rules of Conway's Game of Life, but the neighbors are randomly chosen from cells within a certain radius (here, the radius is 5)</p>
+        <div id="percentage-slider"></div>
+        <div id="speed-slider"></div>
     </div>
     <script src="random-life.js"></script>
     <img src="preview.png" style="display: none">
